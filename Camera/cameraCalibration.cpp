@@ -13,14 +13,14 @@ using namespace std;
 int main() {
 	ifstream fin("images.txt");
 	ofstream fout("calibration_result.txt");
-	cout << "---------¿ªÊ¼ÌáÈ¡½Çµã---------" << endl;  // ¶ÁÈ¡Ã¿Ò»·ùÍ¼Æ¬£¬´ÓÖĞÌáÈ¡³ö½Çµã£¬È»ºó¶Ô½Çµã½øĞĞÑÇÏñËØ¾«È·»¯
-	int imageCount = 0;//Í¼ÏñÊıÁ¿
-	Size imageSize;//Í¼Ïñ³ß´ç
-	Size boardSize = Size(9, 6);//±ê¶¨°åÉÏÃ¿ĞĞÃ¿ÁĞµÄ½ÇµãÊı
-	vector<Point2f> imagePointsBuf; //»º´æÃ¿·ùÍ¼ÏñÉÏ¼ì²âµ½µÄ½ÇµãÊı
-	vector<vector<Point2f>> imagePointSeq;//±£´æ¼ì²âµ½µÄËùÓĞ½ÇµãÊı
+	cout << "---------å¼€å§‹æå–è§’ç‚¹---------" << endl;  // è¯»å–æ¯ä¸€å¹…å›¾ç‰‡ï¼Œä»ä¸­æå–å‡ºè§’ç‚¹ï¼Œç„¶åå¯¹è§’ç‚¹è¿›è¡Œäºšåƒç´ ç²¾ç¡®åŒ–
+	int imageCount = 0;//å›¾åƒæ•°é‡
+	Size imageSize;//å›¾åƒå°ºå¯¸
+	Size boardSize = Size(9, 6);//æ ‡å®šæ¿ä¸Šæ¯è¡Œæ¯åˆ—çš„è§’ç‚¹æ•°
+	vector<Point2f> imagePointsBuf; //ç¼“å­˜æ¯å¹…å›¾åƒä¸Šæ£€æµ‹åˆ°çš„è§’ç‚¹æ•°
+	vector<vector<Point2f>> imagePointSeq;//ä¿å­˜æ£€æµ‹åˆ°çš„æ‰€æœ‰è§’ç‚¹æ•°
 	string fileName;
-	int count = 0;//ÓÃÓÚ´æ´¢½Çµã¸öÊı
+	int count = 0;//ç”¨äºå­˜å‚¨è§’ç‚¹ä¸ªæ•°
 	while (getline(fin,fileName))
 	{
 		imageCount++;
@@ -31,13 +31,13 @@ int main() {
 			continue;
 		}
 		imshow("Test", imageInput);
-		if (imageCount == 1) {  //¶ÁÈ¡µÚÒ»ÕÅÍ¼Æ¬Ê±»ñÈ¡Í¼Ïñ¿í¸ßĞÅÏ¢
+		if (imageCount == 1) {  //è¯»å–ç¬¬ä¸€å¼ å›¾ç‰‡æ—¶è·å–å›¾åƒå®½é«˜ä¿¡æ¯
 			imageSize.width = imageInput.cols;
 			imageSize.height = imageInput.rows;
 			cout << "imageSize.width = " << imageSize.width << endl;
 			cout << "imageSize.height = " << imageSize.height << endl;
 		}
-		//·¢ÏÖÆåÅÌ½Çµã
+		//å‘ç°æ£‹ç›˜è§’ç‚¹
 		if (0 == findChessboardCorners(imageInput, boardSize, imagePointsBuf)) {
 			cout << "can not find chessboard corners! " << endl;
 			return 0;
@@ -46,43 +46,43 @@ int main() {
 		{
 			Mat viewGray;
 			cvtColor(imageInput, viewGray, CV_BGR2GRAY);
-			//ÑÇÏñËØ¾«È·»¯,Size(5,5)ÊÇËÑË÷´°¿ÚµÄ´óĞ¡£¬Size(-1,-1)±íÊ¾Ã»ÓĞËÀÇø£¬µÚËÄ¸ö²ÎÊı¶¨ÒåÇó½ÇµãµÄµü´ú¹ı³ÌµÄÖÕÖ¹Ìõ¼ş
+			//äºšåƒç´ ç²¾ç¡®åŒ–,Size(5,5)æ˜¯æœç´¢çª—å£çš„å¤§å°ï¼ŒSize(-1,-1)è¡¨ç¤ºæ²¡æœ‰æ­»åŒºï¼Œç¬¬å››ä¸ªå‚æ•°å®šä¹‰æ±‚è§’ç‚¹çš„è¿­ä»£è¿‡ç¨‹çš„ç»ˆæ­¢æ¡ä»¶
 			cornerSubPix(viewGray, imagePointsBuf, Size(5, 5), Size(-1, -1), TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
 			count += imagePointsBuf.size();
 			imagePointSeq.push_back(imagePointsBuf);
-			//»æÖÆ±»³É¹¦±ê¶¨µÄ½Çµã
-			drawChessboardCorners(viewGray, boardSize, imagePointsBuf, false);//false±íÊ¾ÓĞÎ´±»Ì½²âµ½µÄÄÚ½Çµã£¬ÕâÊ±ºòº¯Êı»áÒÔÔ²È¦±ê¼Ç³ö¼ì²âµ½µÄÄÚ½Çµã
+			//ç»˜åˆ¶è¢«æˆåŠŸæ ‡å®šçš„è§’ç‚¹
+			drawChessboardCorners(viewGray, boardSize, imagePointsBuf, true);//falseè¡¨ç¤ºæœ‰æœªè¢«æ¢æµ‹åˆ°çš„å†…è§’ç‚¹ï¼Œè¿™æ—¶å€™å‡½æ•°ä¼šä»¥åœ†åœˆæ ‡è®°å‡ºæ£€æµ‹åˆ°çš„å†…è§’ç‚¹
 			namedWindow("Camera Calibration", WINDOW_NORMAL);
 			imshow("Camera Calibration", viewGray);
 			waitKey(500);
 		}
 	}
-	int total = imagePointSeq.size();//Í¼Æ¬ÊıÁ¿
+	int total = imagePointSeq.size();//å›¾ç‰‡æ•°é‡
 	cout << "total = " << total << endl;
-	int cornerNum = boardSize.height * boardSize.width; // Ã¿ÕÅÍ¼Æ¬ÉÏµÄ×Ü½ÇµãÊı
-	cout << "----Í¼Æ¬µÄÊı¾İ----" << endl;
+	int cornerNum = boardSize.height * boardSize.width; // æ¯å¼ å›¾ç‰‡ä¸Šçš„æ€»è§’ç‚¹æ•°
+	cout << "----å›¾ç‰‡çš„æ•°æ®----" << endl;
 	for (int i = 0; i < total; i++) {
-		//Êä³öµÚiÕÅÍ¼Æ¬µÄµÚÒ»¸ö½ÇµãµÄ×ø±ê
+		//è¾“å‡ºç¬¬iå¼ å›¾ç‰‡çš„ç¬¬ä¸€ä¸ªè§’ç‚¹çš„åæ ‡
 		cout << "---" << imagePointSeq[i][0].x;
 		cout << "---" << imagePointSeq[i][0].y << endl;
 	}
-	cout << endl << "½ÇµãÌáÈ¡Íê³É" << endl;
-	cout << "¿ªÊ¼±ê¶¨¡£¡£¡£" << endl;
-	Size squareSize = Size(10, 10);//Êµ¼Ê²âÁ¿µÃµ½µÄ±ê¶¨°åÉÏÃ¿¸öÆåÅÌ¸ñµÄ´óĞ¡
-	vector<vector<Point3f>> objectPoints;//±£´æ±ê¶¨°åÉÏ½ÇµãµÄÈıÎ¬×ø±ê
-	Mat cameraMatrix = Mat(3, 3, CV_32FC1, Scalar::all(0));//ÉãÏñ»úÄÚ²ÎÊı¾ØÕó
-	vector<int> pointCount;//Ã¿·ùÍ¼ÏñÖĞ½ÇµãµÄÊıÁ¿
-	Mat distCoeffs = Mat(1, 5, CV_32FC1, Scalar::all(0));//ÉãÏñ»úµÄ5¸ö»û±äÏµÊı
-	vector<Mat> rvecs;//Ã¿·ùÍ¼ÏñµÄĞı×ªÏòÁ¿
-	vector<Mat> tvecs;//Ã¿·ùÍ¼ÏñµÄÆ½ÒÆÏòÁ¿
-	//³õÊ¼»¯±ê¶¨°åÉÏ½ÇµãµÄÈıÎ¬×ø±ê
+	cout << endl << "è§’ç‚¹æå–å®Œæˆ" << endl;
+	cout << "å¼€å§‹æ ‡å®šã€‚ã€‚ã€‚" << endl;
+	Size squareSize = Size(10, 10);//å®é™…æµ‹é‡å¾—åˆ°çš„æ ‡å®šæ¿ä¸Šæ¯ä¸ªæ£‹ç›˜æ ¼çš„å¤§å°
+	vector<vector<Point3f>> objectPoints;//ä¿å­˜æ ‡å®šæ¿ä¸Šè§’ç‚¹çš„ä¸‰ç»´åæ ‡
+	Mat cameraMatrix = Mat(3, 3, CV_32FC1, Scalar::all(0));//æ‘„åƒæœºå†…å‚æ•°çŸ©é˜µ
+	vector<int> pointCount;//æ¯å¹…å›¾åƒä¸­è§’ç‚¹çš„æ•°é‡
+	Mat distCoeffs = Mat(1, 5, CV_32FC1, Scalar::all(0));//æ‘„åƒæœºçš„5ä¸ªç•¸å˜ç³»æ•°
+	vector<Mat> rvecs;//æ¯å¹…å›¾åƒçš„æ—‹è½¬å‘é‡
+	vector<Mat> tvecs;//æ¯å¹…å›¾åƒçš„å¹³ç§»å‘é‡
+	//åˆå§‹åŒ–æ ‡å®šæ¿ä¸Šè§’ç‚¹çš„ä¸‰ç»´åæ ‡
 	int i, j, t;
 	for (t = 0; t < imageCount; t++) {
 		vector<Point3f> tempPointSet;
 		for (i = 0; i < boardSize.height; i++) {
 			for (j = 0; j < boardSize.width; j++) {
 				Point3f realPoint;
-				//¼ÙÉè±ê¶¨°å·ÅÔÚÊÀ½ç×ø±êÖĞz=0µÄÆ½ÃæÉÏ
+				//å‡è®¾æ ‡å®šæ¿æ”¾åœ¨ä¸–ç•Œåæ ‡ä¸­z=0çš„å¹³é¢ä¸Š
 				realPoint.x = i * squareSize.width;
 				realPoint.y = j * squareSize.height;
 				realPoint.z = 0;
@@ -91,65 +91,65 @@ int main() {
 		}
 		objectPoints.push_back(tempPointSet);
 	}
-	//³õÊ¼»¯Ã¿·ùÍ¼ÏñÖĞµÄ½ÇµãÊıÁ¿£¬¼Ù¶¨Ã¿·ùÍ¼ÏñÖĞ¶¼¿ÉÒÔ¿´µ½ÍêÕûµÄ±ê¶¨°å
+	//åˆå§‹åŒ–æ¯å¹…å›¾åƒä¸­çš„è§’ç‚¹æ•°é‡ï¼Œå‡å®šæ¯å¹…å›¾åƒä¸­éƒ½å¯ä»¥çœ‹åˆ°å®Œæ•´çš„æ ‡å®šæ¿
 	for (i = 0; i < imageCount; i++) {
 		pointCount.push_back(boardSize.width * boardSize.height);
 	}
 	calibrateCamera(objectPoints, imagePointSeq, imageSize, cameraMatrix, distCoeffs, tvecs, rvecs);
-	cout << "----±ê¶¨½áÊø£¬¶Ô±ê¶¨½á¹û½øĞĞÆÀ¼Û----" << endl;
-	double totalErr = 0.0;//ËùÓĞÍ¼ÏñµÄÆ½¾ùÎó²î×ÜºÍ
-	double err = 0.0;//Ã¿·ùÍ¼ÏñµÄÆ½¾ùÎó²î
-	vector<Point2f> imagePoints;//±£´æÖØĞÂ¼ÆËãµÃµ½µÄÍ¶Ó°µã
-	cout << "\tÃ¿·ùÍ¼ÏñµÄ±ê¶¨Îó²î£º\n";
-	fout << "Ã¿·ùÍ¼ÏñµÄ±ê¶¨Îó²î£º\n";
+	cout << "----æ ‡å®šç»“æŸï¼Œå¯¹æ ‡å®šç»“æœè¿›è¡Œè¯„ä»·----" << endl;
+	double totalErr = 0.0;//æ‰€æœ‰å›¾åƒçš„å¹³å‡è¯¯å·®æ€»å’Œ
+	double err = 0.0;//æ¯å¹…å›¾åƒçš„å¹³å‡è¯¯å·®
+	vector<Point2f> imagePoints;//ä¿å­˜é‡æ–°è®¡ç®—å¾—åˆ°çš„æŠ•å½±ç‚¹
+	cout << "\tæ¯å¹…å›¾åƒçš„æ ‡å®šè¯¯å·®ï¼š\n";
+	fout << "æ¯å¹…å›¾åƒçš„æ ‡å®šè¯¯å·®ï¼š\n";
 	for (i = 0; i < imageCount; i++) {
 		vector<Point3f> tempPointSet = objectPoints[i];
-		//Í¨¹ıµÃµ½µÄÄÚÍâ²ÎÊı£¬¶Ô¿Õ¼äµÄÈıÎ¬µã½øĞĞÖØĞÂ¼ÆËã£¬µÃµ½ĞÂµÄÍ¶Ó°µã
+		//é€šè¿‡å¾—åˆ°çš„å†…å¤–å‚æ•°ï¼Œå¯¹ç©ºé—´çš„ä¸‰ç»´ç‚¹è¿›è¡Œé‡æ–°è®¡ç®—ï¼Œå¾—åˆ°æ–°çš„æŠ•å½±ç‚¹
 		projectPoints(tempPointSet, tvecs[i], rvecs[i], cameraMatrix, distCoeffs, imagePoints);
-		vector<Point2f> tempImagePoint = imagePointSeq[i];//µÚiÕÅÍ¼ÏñµÄ½Çµã
+		vector<Point2f> tempImagePoint = imagePointSeq[i];//ç¬¬iå¼ å›¾åƒçš„è§’ç‚¹
 		Mat tempImagePointMat = Mat(1, tempImagePoint.size(), CV_32FC2);//
 		Mat imagePointsMat = Mat(1, imagePoints.size(), CV_32FC2);
 		for (j = 0; j < tempImagePoint.size(); j++) {
-			imagePointsMat.at<Vec2f>(0, j) = Vec2f(imagePoints[j].x, imagePoints[j].y);//ÖØĞÂÍ¶Ó°ºóµÄ
-			tempImagePointMat.at<Vec2f>(0, j) = Vec2f(tempImagePoint[j].x, tempImagePoint[j].y);//Ö®Ç°Í¶Ó°µÄ
+			imagePointsMat.at<Vec2f>(0, j) = Vec2f(imagePoints[j].x, imagePoints[j].y);//é‡æ–°æŠ•å½±åçš„
+			tempImagePointMat.at<Vec2f>(0, j) = Vec2f(tempImagePoint[j].x, tempImagePoint[j].y);//ä¹‹å‰æŠ•å½±çš„
 		}
 		err = norm(imagePointsMat, tempImagePoint, NORM_L2);
 		err /= pointCount[i];
 		totalErr += err;
-		cout << "µÚ" << i + 1 << "·ùÍ¼ÏñµÄÆ½¾ùÎó²î£º" << err << "ÏñËØ" << endl;
-		fout << "µÚ" << i + 1 << "·ùÍ¼ÏñµÄÆ½¾ùÎó²î£º" << err << "ÏñËØ" << endl;
+		cout << "ç¬¬" << i + 1 << "å¹…å›¾åƒçš„å¹³å‡è¯¯å·®ï¼š" << err << "åƒç´ " << endl;
+		fout << "ç¬¬" << i + 1 << "å¹…å›¾åƒçš„å¹³å‡è¯¯å·®ï¼š" << err << "åƒç´ " << endl;
 	}
-	cout << "×ÜÌåÆ½¾ùÎó²î£º" << totalErr / imageCount << "ÏñËØ" << endl;
-	fout << "×ÜÌåÆ½¾ùÎó²î£º" << totalErr / imageCount << "ÏñËØ" << endl << endl;
+	cout << "æ€»ä½“å¹³å‡è¯¯å·®ï¼š" << totalErr / imageCount << "åƒç´ " << endl;
+	fout << "æ€»ä½“å¹³å‡è¯¯å·®ï¼š" << totalErr / imageCount << "åƒç´ " << endl << endl;
 	
-	cout << "¿ªÊ¼±£´æ±ê¶¨½á¹û¡£¡£¡£¡£¡£" << endl;
-	Mat rotationMatrix = Mat(3, 3, CV_32FC1, Scalar::all(0));//±£´æÃ¿·ùÍ¼ÏñµÄĞı×ª¾ØÕó
-	fout << "Ïà»úÄÚ²ÎÊı¾ØÕó£º" << endl;
+	cout << "å¼€å§‹ä¿å­˜æ ‡å®šç»“æœã€‚ã€‚ã€‚ã€‚ã€‚" << endl;
+	Mat rotationMatrix = Mat(3, 3, CV_32FC1, Scalar::all(0));//ä¿å­˜æ¯å¹…å›¾åƒçš„æ—‹è½¬çŸ©é˜µ
+	fout << "ç›¸æœºå†…å‚æ•°çŸ©é˜µï¼š" << endl;
 	fout << cameraMatrix << endl << endl;
-	fout << "»û±äÏµÊı£º\n";
+	fout << "ç•¸å˜ç³»æ•°ï¼š\n";
 	fout << distCoeffs << endl << endl;
 	for (int i = 0; i < imageCount; i++) {
-		fout << "µÚ" << i + 1 << "·ùÍ¼ÏñµÄĞı×ªÏòÁ¿" << endl;
+		fout << "ç¬¬" << i + 1 << "å¹…å›¾åƒçš„æ—‹è½¬å‘é‡" << endl;
 		fout << rvecs[i] << endl;
-		//½«Ğı×ªÏòÁ¿×ª»»ÎªÏàÓ¦µÄĞı×ª¾ØÕó
+		//å°†æ—‹è½¬å‘é‡è½¬æ¢ä¸ºç›¸åº”çš„æ—‹è½¬çŸ©é˜µ
 		Rodrigues(rvecs[i], rotationMatrix);
-		fout << "µÚ" << i + 1 << "·ùÍ¼ÏñµÄĞı×ª¾ØÕó£º" << endl;
+		fout << "ç¬¬" << i + 1 << "å¹…å›¾åƒçš„æ—‹è½¬çŸ©é˜µï¼š" << endl;
 		fout << rotationMatrix << endl;
-		fout << "µÚ" << i + 1 << "·ùÍ¼ÏñµÄÆ½ÒÆÏòÁ¿£º" << endl;
+		fout << "ç¬¬" << i + 1 << "å¹…å›¾åƒçš„å¹³ç§»å‘é‡ï¼š" << endl;
 		fout << tvecs[i] << endl;
 	}
-	cout << "Íê³É±£´æ" << endl;
+	cout << "å®Œæˆä¿å­˜" << endl;
 	fout << endl;
-	// ÏÔÊ¾±ê¶¨½á¹û
+	// æ˜¾ç¤ºæ ‡å®šç»“æœ
 	Mat mapx = Mat(imageSize, CV_32FC1);
 	Mat mapy = Mat(imageSize, CV_32FC1);
 	Mat R = Mat::eye(3, 3, CV_32F);
-	cout << "±£´æ½ÃÕıÍ¼Ïñ" << endl;
+	cout << "ä¿å­˜çŸ«æ­£å›¾åƒ" << endl;
 	string imageFileName;
 	stringstream ss;
 	for (int i = 1; i <= imageCount; i++) {
 		cout << "Image " << i << " ......" << endl;
-		initUndistortRectifyMap(cameraMatrix, distCoeffs, R, cameraMatrix, imageSize, CV_32FC1, mapx, mapy);//¼ÆËã»û±äÓ³Éä
+		initUndistortRectifyMap(cameraMatrix, distCoeffs, R, cameraMatrix, imageSize, CV_32FC1, mapx, mapy);//è®¡ç®—ç•¸å˜æ˜ å°„
 		ss.clear();
 		imageFileName.clear();
 		string filePath = "left";
@@ -159,9 +159,9 @@ int main() {
 		filePath += ".jpg";
 		Mat imageSource = imread(filePath);
 		Mat newImage = imageSource.clone();
-		remap(imageSource, newImage, mapx, mapy, INTER_LINEAR);//°ÑÇóµÃµÄÓ³ÉäÓ¦ÓÃµ½Í¼ÏñÉÏ
+		remap(imageSource, newImage, mapx, mapy, INTER_LINEAR);//æŠŠæ±‚å¾—çš„æ˜ å°„åº”ç”¨åˆ°å›¾åƒä¸Š
 		imageFileName += "_d.jpg";
-		imwrite(imageFileName, newImage);//±£´æ½ÃÕıºóµÄÍ¼Æ¬
+		imwrite(imageFileName, newImage);//ä¿å­˜çŸ«æ­£åçš„å›¾ç‰‡
 		imshow("Original Image", imageSource);
 		waitKey(500);
 		imshow("Undistorted Image", newImage);
