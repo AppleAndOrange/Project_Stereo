@@ -47,13 +47,13 @@ int main() {
 			Mat viewGray;
 			cvtColor(imageInput, viewGray, CV_BGR2GRAY);
 			//亚像素精确化,Size(5,5)是搜索窗口的大小，Size(-1,-1)表示没有死区，第四个参数定义求角点的迭代过程的终止条件
-			cornerSubPix(viewGray, imagePointsBuf, Size(5, 5), Size(-1, -1), TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
+			cornerSubPix(viewGray, imagePointsBuf, Size(5, 5), Size(-1, -1), TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 40, 0.1));
 			count += imagePointsBuf.size();
 			imagePointSeq.push_back(imagePointsBuf);
 			//绘制被成功标定的角点
-			drawChessboardCorners(viewGray, boardSize, imagePointsBuf, true);//false表示有未被探测到的内角点，这时候函数会以圆圈标记出检测到的内角点
+			drawChessboardCorners(imageInput, boardSize, imagePointsBuf, true);//false表示有未被探测到的内角点，这时候函数会以圆圈标记出检测到的内角点
 			namedWindow("Camera Calibration", WINDOW_NORMAL);
-			imshow("Camera Calibration", viewGray);
+			imshow("Camera Calibration", imageInput);
 			waitKey(500);
 		}
 	}
